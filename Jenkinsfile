@@ -7,29 +7,33 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Fetch Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/your-username/your-repo.git'
+                // Checkout the repository from GitHub
+                git 'https://github.com/your-github-username/your-repo-name.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${env.DOCKERHUB_REPO}:latest")
+                    def image = docker.build('your-dockerhub-username/your-image-name:latest')
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                    // Build the Docker image
+                    def image = docker.build("${env.DOCKERHUB_REPO}:latest")
                 }
             }
         }
-
         stage('Push Docker Image') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', "${env.DOCKERHUB_CREDENTIALS}") {
-                        docker.image("${env.DOCKERHUB_REPO}:latest").push()
+                        // Push the Docker image to Docker Hub
+                        def image = docker.image("${env.DOCKERHUB_REPO}:latest")
+                        image.push()
                     }
                 }
             }
         }
     }
-}
  
