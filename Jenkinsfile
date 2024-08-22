@@ -7,39 +7,29 @@ pipeline {
     }
 
     stages {
-        stage('Fetch Repository') {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Checkout the repository from GitHub
-                git 'https://github.com/your-github-username/your-repo-name.git'
+                git 'https://github.com/your-username/your-repo.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def image = docker.build('your-dockerhub-username/your-image-name:latest')
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                    // Build the Docker image
-                    def image = docker.build("${env.DOCKERHUB_REPO}:latest")
+                    docker.build("${env.DOCKERHUB_REPO}:latest")
                 }
             }
         }
+
         stage('Push Docker Image') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', "${env.DOCKERHUB_CREDENTIALS}") {
-                        // Push the Docker image to Docker Hub
-                        def image = docker.image("${env.DOCKERHUB_REPO}:latest")
-                        image.push()
+                        docker.image("${env.DOCKERHUB_REPO}:latest").push()
                     }
                 }
             }
         }
     }
-    post {
-        success {
-            // Trigger another job upon successful completion
-            build job: 'Second-Job-Name', wait: false
-        }
-    }
 }
+ 
