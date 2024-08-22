@@ -11,13 +11,13 @@ WORKDIR /app
 RUN echo 'echo "Hello, World!"' > hello.sh
 
 # Copy the current directory contents into the container at /app
-COPY hello.py .
+COPY Hello.py .
 
 # Make the script executable
 RUN chmod +x hello.sh
 
 # Run the script when the container launches
-CMD ["./hello.sh"]
+CMD ["./Hello.sh"]
 
 # Run the Python script when the container launches
-CMD ["python", "hello.py"]
+CMD ["python", "Hello.py"]
